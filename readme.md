@@ -39,4 +39,5 @@ docker compose up --build
 Frontend: http://localhost:8080/
 
 ### Testing online
-
+https://pack-sizer-test-task.onrender.com
+*In some cases the application may be stopped and it will take up to 50 seconds to restart (platform requirements), if the request failed please retry it*
