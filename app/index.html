@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Packs Calculator</title>
+    <style>
+        .field-wrapper {
+            margin-bottom: 10px;
+        }
+        .remove-btn {
+            margin-left: 10px;
+            color: red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>Order Packs Calculator</h1>
+    <div>
+        <form id="dynamicForm" onsubmit="return false;">
+            <p>
+                <label>Order Quantity:</label>
+                <input type="number" name="quantity" required step="any" min="0"/>
+            </p>
+            <div id="fieldList">
+                <div class="field-wrapper">
+                    <input type="number" name="packSize[]" placeholder="Enter value" value="250" step="any" min="1">
+                    <span class="remove-btn" onclick="removeField(this)">Remove</span>
+                </div>
+                <div class="field-wrapper">
+                    <input type="number" name="packSize[]" placeholder="Enter value" value="500" step="any" min="1">
+                    <span class="remove-btn" onclick="removeField(this)">Remove</span>
+                </div>
+                <div class="field-wrapper">
+                    <input type="number" name="packSize[]" placeholder="Enter value" value="1000" step="any" min="1">
+                    <span class="remove-btn" onclick="removeField(this)">Remove</span>
+                </div>
+                <div class="field-wrapper">
+                    <input type="number" name="packSize[]" placeholder="Enter value" value="2000" step="any" min="1">
+                    <span class="remove-btn" onclick="removeField(this)">Remove</span>
+                </div>
+                <div class="field-wrapper">
+                    <input type="number" name="packSize[]" placeholder="Enter value" value="5000" step="any" min="1">
+                    <span class="remove-btn" onclick="removeField(this)">Remove</span>
+                </div>
+            </div>
+            <button type="button" onclick="addField()">Add Field</button>
+            <br><br>
+            <button onclick="sendRequest()">Calculate</button>
+        </form>
+    </div>
+    <br><br>
+    <div>
+        <div id="result"></div>
+    </div>
+</div>
+
+<script>
+    function addField() {
+        const fieldList = document.getElementById('fieldList');
+        const newField = document.createElement('div');
+        newField.className = 'field-wrapper';
+        newField.innerHTML = `
+                <input type="number" name="packSize[]" placeholder="Enter value">
+                <span class="remove-btn" onclick="removeField(this)">Remove</span>
+            `;
+        fieldList.appendChild(newField);
+    }
+
+    function removeField(element) {
+        const fieldList = document.getElementById('fieldList');
+        if (fieldList.children.length > 1) {
+            element.parentElement.remove();
+        } else {
+            alert('You must have at least one field.');
+        }
+    }
+
+    function sendRequest() {
+        const form = document.getElementById('dynamicForm');
+        const formData = new FormData(form);
+        const target = parseInt(formData.get('quantity'));
+        const numbers = formData.getAll('packSize[]').map((a) => parseInt(a));
+
+        fetch("/calculatePacks", {
+            method: "POST",
+            body: JSON.stringify({target, numbers}),
+            headers: {
+                "content-type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                document.getElementById("result").innerHTML = "";
+                const table = document.createElement("table")
+                const headerRow = table.insertRow();
+                headerRow.insertCell().textContent = "Quantity";
+                headerRow.insertCell().textContent = "Pack Size";
+
+                Object.keys(data.result).forEach((key) => {
+                    const row = table.insertRow();
+                    row.insertCell().textContent = data.result[key];
+                    row.insertCell().textContent = key;
+                });
+                document.getElementById("result").appendChild(table);
+            });
+    }
+</script>
+</body>
+</html>
