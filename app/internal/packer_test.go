@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"reflect"
@@ -24,12 +24,23 @@ func TestCalculatePacks(t *testing.T) {
 		{1751, []int{250, 500, 1000, 2000, 5000}, map[int]int{2000: 1}},
 		{4751, []int{250, 500, 1000, 2000, 5000}, map[int]int{5000: 1}},
 		{9751, []int{250, 500, 1000, 2000, 5000}, map[int]int{5000: 2}},
+		{249, []int{250, 500, 1000, 2000, 5000}, map[int]int{250: 1}},
 
 		{3751, []int{250, 500, 1500, 2000, 4000}, map[int]int{4000: 1}},
+		{14, []int{5, 12}, map[int]int{5: 3}},
+		{24, []int{5, 12}, map[int]int{12: 2}},
+		{500, []int{250}, map[int]int{250: 2}},
+		{751, []int{5, 12}, map[int]int{5: 11, 12: 58}},
+		{251, []int{5, 12, 250}, map[int]int{5: 7, 12: 18}},
+		{751, []int{5, 12, 250}, map[int]int{250: 2, 12: 13, 5: 19}},
+		{26, []int{5, 12}, map[int]int{12: 1, 5: 3}},
+		{27, []int{5, 12}, map[int]int{12: 1, 5: 3}},
+		{28, []int{5, 12}, map[int]int{12: 2, 5: 1}},
+		{30, []int{5, 12}, map[int]int{5: 6}},
 	}
 
 	for _, c := range cases {
-		result := calculatePacks(c.orderItems, c.packSizes)
+		result := CalculatePacks(c.orderItems, c.packSizes)
 		if !reflect.DeepEqual(result, c.expected) {
 			t.Errorf("calculatePacks(%d) == %v, expected %v", c.orderItems, result, c.expected)
 		}
