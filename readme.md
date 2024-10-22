@@ -37,6 +37,3 @@ docker compose up --build
 ```
 
 Frontend: http://localhost:8080/
-
-### Testing online
-https://pack-sizer-test-task-kuzdu.ondigitalocean.app
