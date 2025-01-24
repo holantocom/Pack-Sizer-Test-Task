@@ -37,3 +37,6 @@ docker compose up --build
 ```
 
 Frontend: http://localhost:8080/
+
+### Testing online
+https://super-packer-software-s37kz.ondigitalocean.app
